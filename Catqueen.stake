@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CatQueen Forever</title>
+
+  <!-- Thirdweb SDK via CDN -->
+  <script type="module">
+    import { createThirdwebClient, connectWallet, getWalletBalance } from "https://esm.sh/thirdweb";
+
+    // 🧩 Ganti clientId ini dengan punyamu
+    const client = createThirdwebClient({
+      clientId: "77bdb1a4b615d59917efaef65a2b745e",
+    });
+
+    let connectedWallet;
+
+    async function connect() {
+      try {
+        connectedWallet = await connectWallet({ client });
+        const address = await connectedWallet.getAddress();
+        document.getElementById("status").innerText = `Connected: ${address.slice(0,6)}...${address.slice(-4)}`;
+
+        const balance = await getWalletBalance({ client, chain: "base-mainnet", address });
+        document.getElementById("balance").innerText = `Balance: ${balance.displayValue} ${balance.symbol}`;
+      } catch (err) {
+        console.error(err);
+        alert("Gagal connect ke wallet.");
+      }
+    }
+
+    window.connect = connect;
+  </script>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #1e1e2f, #3a3a5c);
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+    button {
+      padding: 12px 24px;
+      background: #ff4dd2;
+      border: none;
+      border-radius: 10px;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #ff7fe0;
+    }
+  </style>
+</head>
+<body>
+  <h1>🐱 CatQueen Forever</h1>
+  <p id="status">Wallet belum terhubung</p>
+  <p id="balance"></p>
+  <button onclick="connect()">Connect Wallet</button>
+</body>
+</html>
